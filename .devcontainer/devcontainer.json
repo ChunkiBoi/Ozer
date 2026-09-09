@@ -37,7 +37,7 @@
     }
   },
 
-  "postCreateCommand": "pip install --upgrade pip && pip install flask flask-login python-dotenv requests sqlite-web openai google-genai groq",
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y sqlite3 && pip install --upgrade pip && pip install flask flask-login python-dotenv requests sqlite-web openai google-genai groq",
 
   "remoteUser": "vscode"
 }
