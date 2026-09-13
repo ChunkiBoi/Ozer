@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+  <div class="flex justify-center items-center min-h-[calc(100vh-4rem)]">
+    <div class="card w-96 bg-base-200 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title justify-center mb-4">Log into Ozer</h2>
+        <div class="flex w-full flex-col lg:flex-col">
+          <div class="card bg-base-300 rounded-box grid h-60 grow place-items-center">
+            <form action="/login" method="POST">
+              <!-- Username Input -->
+              <div class="form-control w-full mb-4">
+                <label class="label">
+                  <span class="label-text">Username</span>
+                </label>
+                <input type="text" name="username" placeholder="Enter your username" class="input input-bordered w-full" required />
+              </div>
+              <!-- Password Input -->
+              <div class="form-control w-full mb-6">
+                <label class="label">
+                  <span class="label-text">Password</span>
+                </label>
+                <input type="password" name="password" placeholder="Enter your password" class="input input-bordered w-full" required />
+              </div>
+              <!-- Submit -->
+              <div class="form-action">
+                <button type="submit" class="btn btn-primary">Log In</button>
+              </div>
+            </form>
+          </div>
+          <div class="divider"></div>
+          <div class="card bg-base-300 rounded-box grid h-32 grow place-items-center">
+            <form action="/register" method="GET">
+              <div class="form-control w-full mb-6">
+                <label class="label">
+                  <b><i><span class="label-text">New to Ozer?</span></b></i>
+                </label>
+              </div>
+              <div class="form-action flex justify-center">
+                <button type="submit" class="btn btn-secondary">Register</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block li %}
+
+  <li>
+    <a href="/login" class="btn btn-ghost w-full justify-start">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-5 w-5 mr-2 stroke-current">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+      </svg>
+      Log In
+    </a>
+  </li>
+  <li>
+    <a href="/register" class="btn btn-ghost w-full justify-start">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-5 w-5 mr-2 stroke-current">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+      </svg>
+      Register
+    </a>
+  </li>
+
+{% endblock %}
