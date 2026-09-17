@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+<!-- AI-assisted: Copilot helped iterate on this home-page card and carousel layout,
+   especially the DaisyUI/Tailwind responsive styling and visual hierarchy. I
+   reviewed and refined the final structure and design choices for the page. -->
+
+{% block title %}Home{% endblock %}
+
+{% block main %}
+
+  <div class="flex min-h-[calc(100vh-4rem)] items-center justify-center py-8">
+    <div class="w-full max-w-4xl">
+      <div class="carousel carousel-center w-full overflow-hidden rounded-2xl">
+        <div id="item1" class="carousel-item w-full justify-center">
+          <div class="aura aura-dual w-full max-w-4xl overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20">
+            <div class="card lg:card-side bg-base-200 h-full">
+              <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
+                <img
+                  src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
+                  alt="Ozer Logo"
+                  class="h-48 w-48 rounded-2xl object-cover lg:h-64 lg:w-64"
+                />
+              </figure>
+              <div class="card-body flex flex-col justify-center p-8 lg:p-10">
+                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Hello {{ user.username }}! Welcome to your Home Page!</h2>
+                <p class="mb-6 text-base text-base-content/90">You are logged in.</p>
+                <p class="mb-6 text-base text-base-content/90">Use the arrows below to see what Ozer has to offer!</p>
+                <div class="card-actions justify-start">
+                  <a href="{{ url_for('logout') }}" class="btn btn-error">Log Out</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="item2" class="carousel-item w-full justify-center">
+          <div class="aura aura-dual w-full max-w-4xl overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20">
+            <div class="card lg:card-side bg-base-200 h-full">
+              <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
+                <img
+                  src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
+                  alt="Ozer Logo"
+                  class="h-48 w-48 rounded-2xl object-cover lg:h-64 lg:w-64"
+                />
+              </figure>
+              <div class="card-body flex flex-col justify-center p-8 lg:p-10">
+                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Chat with Ozer!</h2>
+                <p class="mb-6 text-base text-base-content/90">Select from a wide range of free models to chat with!</p>
+                <p class="mb-6 text-base text-base-content/90">Create multiple chat sessions and switch between them effortlessly.</p>
+                <p class="mb-1"></p>
+                <div class="card-actions justify-start">
+                  <a href="{{ url_for('home') }}" class="btn btn-accent">Create Chat</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-center gap-3">
+        <a href="#item1" class="btn btn-circle btn-ghost" aria-label="Previous card">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+          </svg>
+        </a>
+        <a href="#item2" class="btn btn-circle btn-ghost" aria-label="Next card">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

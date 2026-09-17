@@ -11,6 +11,9 @@
 #   Clear the database by dropping all tables and recreating them.
 #   WARNING: This script will clear existing data.
 
+# AI assistance disclosure: GitHub Copilot helped explain and review this
+# SQLite initialization script and its relationship to schema.sql.
+
 import sqlite3
 from pathlib import Path
 
