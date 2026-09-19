@@ -11,9 +11,9 @@
   <div class="flex min-h-[calc(100vh-4rem)] items-center justify-center py-8">
     <div class="w-full max-w-4xl">
       <div class="carousel carousel-center w-full overflow-hidden rounded-2xl">
-        <div id="item1" class="carousel-item w-full justify-center">
-          <div class="aura aura-dual w-full max-w-4xl overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20">
-            <div class="card lg:card-side bg-base-200 h-full">
+        <div id="item1" class="carousel-item h-auto w-full flex-col items-start justify-center lg:h-full">
+          <div class="aura aura-dual h-fit w-full max-w-4xl overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+            <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
               <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
                 <img
                   src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
@@ -22,20 +22,29 @@
                 />
               </figure>
               <div class="card-body flex flex-col justify-center p-8 lg:p-10">
-                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Hello {{ user.username }}! Welcome to your Home Page!</h2>
-                <p class="mb-6 text-base text-base-content/90">You are logged in.</p>
-                <p class="mb-6 text-base text-base-content/90">Use the arrows below to see what Ozer has to offer!</p>
+                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Hello, {{ user.username }}!</h2>
+                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Welcome to your Home Page!</h2>
+                <p class="mb-3 text-base text-base-content/90">You are logged in.</p>
+                <p class="mb-3 text-base text-base-content/90">Use the arrows below to explore the possibilities!</p>
                 <div class="card-actions justify-start">
                   <a href="{{ url_for('logout') }}" class="btn btn-error">Log Out</a>
                 </div>
               </div>
             </div>
           </div>
+          <div class="mt-4 flex w-full shrink-0 justify-center gap-3">
+            <a href="#item1" class="btn btn-circle btn-ghost" aria-label="Previous card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+            </a>
+            <a href="#item2" class="btn btn-circle btn-ghost" aria-label="Next card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          </div>
         </div>
 
-        <div id="item2" class="carousel-item w-full justify-center">
-          <div class="aura aura-dual w-full max-w-4xl overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20">
-            <div class="card lg:card-side bg-base-200 h-full">
+        <div id="item2" class="carousel-item h-auto w-full flex-col items-start justify-center lg:h-full">
+          <div class="aura aura-dual h-fit w-full max-w-4xl overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+            <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
               <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
                 <img
                   src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
@@ -44,32 +53,123 @@
                 />
               </figure>
               <div class="card-body flex flex-col justify-center p-8 lg:p-10">
-                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Chat with Ozer!</h2>
-                <p class="mb-6 text-base text-base-content/90">Select from a wide range of free models to chat with!</p>
-                <p class="mb-6 text-base text-base-content/90">Create multiple chat sessions and switch between them effortlessly.</p>
-                <p class="mb-1"></p>
+                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Create a Chat!</h2>
+                <p class="mb-3 text-base text-base-content/90">Select your preferred model.</p>
+                <p class="mb-3 text-base text-base-content/90">Create a new generic chat session!</p>
                 <div class="card-actions justify-start">
                   <a href="{{ url_for('home') }}" class="btn btn-accent">Create Chat</a>
                 </div>
               </div>
             </div>
           </div>
+          <div class="mt-4 flex w-full shrink-0 justify-center gap-3">
+            <a href="#item1" class="btn btn-circle btn-ghost" aria-label="Previous card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+            </a>
+            <a href="#item3" class="btn btn-circle btn-ghost" aria-label="Next card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          </div>
         </div>
-      </div>
 
-      <div class="mt-4 flex justify-center gap-3">
-        <a href="#item1" class="btn btn-circle btn-ghost" aria-label="Previous card">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
-          </svg>
-        </a>
-        <a href="#item2" class="btn btn-circle btn-ghost" aria-label="Next card">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
-          </svg>
-        </a>
+        <div id="item3" class="carousel-item h-auto w-full flex-col items-start justify-center lg:h-full">
+          <div class="aura aura-dual h-fit w-full max-w-4xl overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+            <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
+              <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
+                <img
+                  src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
+                  alt="Ozer Logo"
+                  class="h-48 w-48 rounded-2xl object-cover lg:h-64 lg:w-64"
+                />
+              </figure>
+              <div class="card-body flex flex-col justify-center p-8 lg:p-10">
+                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Create a Custom Bot!</h2>
+                <p class="mb-3 text-base text-base-content/90">Select your preferred model.</p>
+                <p class="mb-3 text-base text-base-content/90">Provide Instructions:</p>
+                <p class="mb-3 text-base text-base-content/90">How should the bot act?</p>
+                <p class="mb-3 text-base text-base-content/90">Will the bot have a specific focus or specialty?</p>
+                <div class="card-actions justify-start">
+                  <a href="{{ url_for('home') }}" class="btn btn-accent">Create Bot</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex w-full shrink-0 justify-center gap-3">
+            <a href="#item2" class="btn btn-circle btn-ghost" aria-label="Previous card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+            </a>
+            <a href="#item4" class="btn btn-circle btn-ghost" aria-label="Next card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          </div>
+        </div>
+
+        <div id="item4" class="carousel-item h-auto w-full flex-col items-start justify-center lg:h-full">
+          <div class="aura aura-dual h-fit w-full max-w-4xl overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+            <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
+              <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
+                <img
+                  src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
+                  alt="Ozer Logo"
+                  class="h-48 w-48 rounded-2xl object-cover lg:h-64 lg:w-64"
+                />
+              </figure>
+              <div class="card-body flex flex-col justify-center p-8 lg:p-10">
+                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Explore the Sidebar!</h2>
+                <br>
+                <p class="mb-3 text-base text-base-content/90">Open by clicking the Sidebar Button (top-left corner)</p>
+                <p class="mb-3 text-base text-base-content/90">In the Sidebar, you can explore your previously created Chats/Bots.</p>
+                <p class="mb-3 text-base text-base-content/90">You also have the option to delete Chats/Bots there.</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex w-full shrink-0 justify-center gap-3">
+            <a href="#item3" class="btn btn-circle btn-ghost" aria-label="Previous card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+            </a>
+            <a href="#item5" class="btn btn-circle btn-ghost" aria-label="Next card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          </div>
+        </div>
+
+        <div id="item5" class="carousel-item h-auto w-full flex-col items-start justify-center lg:h-full">
+          <div class="aura aura-dual h-fit w-full max-w-4xl overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+            <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
+              <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
+                <img
+                  src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
+                  alt="Ozer Logo"
+                  class="h-48 w-48 rounded-2xl object-cover lg:h-64 lg:w-64"
+                />
+              </figure>
+              <div class="card-body flex flex-col justify-center p-8 lg:p-10">
+                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Customize your Settings!</h2>
+                <p class="mb-3 text-base text-base-content/90">You can visit the Settings page to adjust and save your preferences.</p>
+                <br>
+                <p class="mb-3 text-base text-base-content/90">The theme can be selected from the dropdown menu found</p>
+                <p class="mb-3 text-base text-base-content/90">at the right side of the navigation bar (top-right corner).</p>
+                <p class="mb-3 text-base text-base-content/90">Your selected theme can be saved as default in the Settings!</p>
+                <br>
+                <p class="mb-3 text-base text-base-content/90">You can find some other useful customizations there, too!</p>
+                <p class="mb-3 text-base text-base-content/90">Click the button below to visit the Settings page.</p>
+                <div class="card-actions justify-start">
+                  <a href="{{ url_for('home') }}" class="btn btn-accent">Go to Settings</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex w-full shrink-0 justify-center gap-3">
+            <a href="#item4" class="btn btn-circle btn-ghost" aria-label="Previous card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+            </a>
+            <a href="#item5" class="btn btn-circle btn-ghost" aria-label="Next card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
-
 {% endblock %}

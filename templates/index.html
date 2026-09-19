@@ -1,19 +1,19 @@
 {% extends "layout.html" %}
 
-<!-- AI-assisted: Copilot helped iterate on this home-page card and carousel layout,
-   especially the DaisyUI/Tailwind responsive styling and visual hierarchy. I
-   reviewed and refined the final structure and design choices for the page. -->
+<!-- AI-assisted: Copilot helped design the card and carousel layout, especially the
+     DaisyUI/Tailwind responsive styling and visual hierarchy. I reviewed, refined, 
+     and greatly expanded upon the structure and design of the page. -->
 
 {% block title %}Welcome{% endblock %}
 
 {% block main %}
 
-  <div class="flex min-h-[calc(100vh-4rem)] h-full items-center justify-center py-8">
+  <div class="flex min-h-[calc(100vh-4rem)] h-full items-center justify-center py-20">
     <div class="w-full h-full">
-      <div class="carousel carousel-center w-full h-150 overflow-hidden rounded-2xl">
-        <div id="item1" class="carousel-item w-full justify-center">
-          <div class="aura aura-dual bg-blue-200 w-full overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20">
-            <div class="card lg:card-side bg-base-200 h-full">
+      <div id="carousel" class="carousel carousel-center w-full h-auto overflow-hidden rounded-2xl lg:h-150">
+        <div id="item1" class="carousel-item h-auto w-full flex-col items-start justify-center lg:h-full">
+          <div class="aura aura-dual h-fit w-full overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+            <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
               <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
                 <img
                   src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
@@ -23,19 +23,41 @@
               </figure>
               <div class="card-body flex flex-col justify-center p-8 lg:p-10">
                 <h2 class="card-title mb-4 text-3xl font-bold text-base-content">This is Ozer!</h2>
-                <p class="mb-6 text-base text-base-content/90">You are not logged in.</p>
+                <p></p>
+                <span class="mb-6 text-base text-base-content/90">Welcome! Ozer is a <b>completely free</b> AI chatbot web application.</span>
+                <span class="mb-6 text-base text-base-content/90">Ozer offers a variety of free-tier models from OpenAI, Google Gemini, and Groq!</span>
+                <span class="mb-6 text-base text-base-content/90">
+                  There are plenty of <i><b>fancy</b></i> features available to you, including many personalization options to make Ozer your own!
+                </span>
+                <p></p>
+                <i><span class="mb-6 text-base text-base-content/90">
+                  Note: This is a small, solo-developed project that was created as my Harvard CS50x Final Project.
+                </span></i>
                 <p class="mb-6 text-base text-base-content/90">Use the arrows below to see what Ozer has to offer!</p>
                 <div class="card-actions justify-start">
-                  <a href="{{ url_for('login') }}" class="btn btn-error">Log In</a>
+                  <div class="mt-4 flex justify-center">
+                    <label class="button">
+                      <span class="label">You are not logged in.</span>
+                      <a id="login" href="{{ url_for('login') }}" class="btn btn-error">Log In</a>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <div class="mt-4 flex w-full shrink-0 justify-center gap-3">
+            <a href="#item1" class="btn btn-circle btn-ghost" aria-label="Previous card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+            </a>
+            <a href="#item2" class="btn btn-circle btn-ghost" aria-label="Next card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          </div>
         </div>
 
-        <div id="item2" class="carousel-item w-full justify-center">
-          <div class="aura aura-dual w-full overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20">
-            <div class="card lg:card-side bg-base-200 h-full">
+        <div id="item2" class="carousel-item h-auto w-full flex-col items-start justify-center lg:h-full">
+          <div class="aura aura-dual h-fit w-full overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+            <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
               <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
                 <img
                   src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
@@ -45,31 +67,146 @@
               </figure>
               <div class="card-body flex flex-col justify-center p-8 lg:p-10">
                 <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Chat with Ozer!</h2>
-                <p class="mb-6 text-base text-base-content/90">Select from a wide range of free models to chat with!</p>
-                <p class="mb-6 text-base text-base-content/90">Create multiple chat sessions and switch between them effortlessly.</p>
-                <p class="mb-1"></p>
+                <p></p>
+                <span class="mb-6 text-base text-base-content/90">Select from a wide range of free models to chat with!</span>
+                <span class="mb-6 text-base text-base-content/90">Create multiple chat sessions and switch between them effortlessly.</span>
+                <span class="mb-6 text-base text-base-content/90">Easily manage your chats in the Sidebar!</span>
+                <p></p>
+                <p class="mb-6 text-base text-base-content/90">Click the button below to get started!</p>
                 <div class="card-actions justify-start">
-                  <a href="{{ url_for('home') }}" class="btn btn-accent">Create Chat</a>
+                  <a href="{{ url_for('home') }}" class="btn btn-accent">Create Chat!</a>
                 </div>
               </div>
             </div>
           </div>
+          <div class="mt-4 flex w-full shrink-0 justify-center gap-3">
+            <a href="#item1" class="btn btn-circle btn-ghost" aria-label="Previous card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+            </a>
+            <a href="#item3" class="btn btn-circle btn-ghost" aria-label="Next card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          </div>
         </div>
-      </div>
 
-      <div class="mt-4 flex justify-center gap-3">
-        <a href="#item1" class="btn btn-circle btn-ghost" aria-label="Previous card">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
-          </svg>
-        </a>
-        <a href="#item2" class="btn btn-circle btn-ghost" aria-label="Next card">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
-          </svg>
-        </a>
+        <div id="item3" class="carousel-item h-auto w-full flex-col items-start justify-center lg:h-full">
+          <div class="aura aura-dual h-fit w-full overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+            <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
+              <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
+                <img
+                  src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
+                  alt="Ozer Logo"
+                  class="h-48 w-48 rounded-2xl object-cover lg:h-64 lg:w-64"
+                />
+              </figure>
+              <div class="card-body flex flex-col justify-center p-8 lg:p-10">
+                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Customize your Ozer Experience!</h2>
+                <p class="mb-6"></p>
+                <p class="mb-6 text-base text-base-content/90">There are many customization options available to you.</p>
+                <p class="mb-6 text-base text-base-content/90">You can select a theme for Ozer!</p>
+                <p class="mb-6 text-base text-base-content/90">Choose the default model to be used when a new chat is created.</p>
+                <p class="mb-6 text-base text-base-content/90">Disable models you don't like, so they'll be removed from any model selection menus.</p>
+                <p class="mb-1"></p>
+                <div class="card-actions justify-start">
+                  <a href="{{ url_for('home') }}" class="btn btn-accent">Start Customizing!</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex w-full shrink-0 justify-center gap-3">
+            <a href="#item2" class="btn btn-circle btn-ghost" aria-label="Previous card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+            </a>
+            <a href="#item4" class="btn btn-circle btn-ghost" aria-label="Next card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          </div>
+        </div>
+
+        <div id="item4" class="carousel-item h-auto w-full flex-col items-start justify-center lg:h-full">
+          <div class="aura aura-dual h-fit w-full overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+            <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
+              <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
+                <img
+                  src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
+                  alt="Ozer Logo"
+                  class="h-48 w-48 rounded-2xl object-cover lg:h-64 lg:w-64"
+                />
+              </figure>
+              <div class="card-body flex flex-col justify-center p-8 lg:p-10">
+                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">The Story of Ozer</h2>
+                <p></p>
+                <span class="mb-6 text-base text-base-content/90">My name is Zach, and I created Ozer as my Final Project for</span>
+                <span class="mb-6 text-base text-base-content/90">Harvard's free online CS50x Intro to Computer Science course.</span>
+                <p></p>
+                <span class="mb-6 text-base text-base-content/90">Throughout the development process, I've learned a ton</span>
+                <span class="mb-6 text-base text-base-content/90">about the underlying structures and requirements that</span>
+                <span class="mb-6 text-base text-base-content/90">bring websites or web applications to life.</span>
+                <p class="mb-1"></p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex w-full shrink-0 justify-center gap-3">
+            <a href="#item3" class="btn btn-circle btn-ghost" aria-label="Previous card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+            </a>
+            <a href="#item5" class="btn btn-circle btn-ghost" aria-label="Next card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          </div>
+        </div>
+
+        <div id="item5" class="carousel-item h-auto w-full flex-col items-start justify-center lg:h-full">
+          <div class="aura aura-dual h-fit w-full overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+            <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
+              <figure class="flex items-center justify-center bg-base-100 p-6 lg:w-72">
+                <img
+                  src="{{ url_for('static', filename='web-app-manifest-512x512.png') }}"
+                  alt="Ozer Logo"
+                  class="h-48 w-48 rounded-2xl object-cover lg:h-64 lg:w-64"
+                />
+              </figure>
+              <div class="card-body flex flex-col justify-center p-8 lg:p-10">
+                <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Privacy/Security</h2>
+                <p></p>
+                <p class="mb-6 text-base text-base-content/90">Ozer employs multiple layers of protection for you and your data!</p>
+                <p class="mb-6 text-base text-base-content/90">Register and log into your account without needing to worry about password security.</p>
+                <p class="mb-6 text-base text-base-content/90">All sensitive user data is safely stored, disposed of, or encrypted where applicable.</p>
+                <p class="mb-1"></p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex w-full shrink-0 justify-center gap-3">
+            <a href="#item4" class="btn btn-circle btn-ghost" aria-label="Previous card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+            </a>
+            <a href="#item5" class="btn btn-circle btn-ghost" aria-label="Next card">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block li %}
+
+  <li>
+    <a href="/login" class="btn btn-ghost w-full justify-start">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-5 w-5 mr-2 stroke-current">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+      </svg>
+      Log In
+    </a>
+  </li>
+  <li>
+    <a href="/register" class="btn btn-ghost w-full justify-start">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-5 w-5 mr-2 stroke-current">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+      </svg>
+      Register
+    </a>
+  </li>
 
 {% endblock %}
