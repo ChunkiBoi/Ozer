@@ -187,11 +187,50 @@ def index():
 def settings():
     if request.method == "POST":
         THEMES = [
-            "light", "dark", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+            "light",
+            "dark",
+            "wireframe",
+            "cupcake",
+            "bumblebee",
+            "emerald",
+            "corporate",
+            "garden",
+            "lemonade",
+            "winter",
+            "nord",
+            "pastel",
+            "valentine",
+            "fantasy",
+            "retro",
+            "autumn",
+            "caramellatte",
+            "silk",
+            "acid",
+            "cmyk",
+            "lofi",
+            "cyberpunk",
+            "aqua",
+            "abyss",
+            "black",
+            "business",
+            "coffee",
+            "dim",
+            "dracula",
+            "forest",
+            "halloween",
+            "luxury",
+            "night",
+            "sunset",
+            "synthwave",
         ]
+
         theme = request.form.get("saved_theme")
-        if not theme:
-            flash("")
+
+        if not theme or theme not in THEMES:
+            flash("Invalid Theme", "error")
+        else:
+            # TODO
+            pass
+
     else:
         return render_template("settings.html")
