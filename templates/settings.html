@@ -32,7 +32,7 @@
 <script>
   const settingsThemeControllers = document.querySelectorAll('.theme-controller');
   const settingsThemeInput = document.querySelector('#theme');
-  const settingsSavedTheme = localStorage.getItem('ozer-theme') || 'light';
+  const settingsSavedTheme = document.documentElement.dataset.theme;
 
   if (settingsThemeInput) {
     settingsThemeInput.setAttribute("value", settingsSavedTheme);

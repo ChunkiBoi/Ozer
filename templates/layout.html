@@ -4,7 +4,11 @@
   drawer behavior, flash-message styling, theme selector, and favicon/layout
   structure. I reviewed and adjusted the final HTML/CSS to match the project's
   intended design and functionality. -->
-<html lang="en">
+<html
+  lang="en"
+  data-theme="{{ theme|default('light', true) }}"
+  data-backend-theme="{{ theme|default('', true) }}"
+>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -204,12 +208,12 @@
       updateDrawer();
 
       const themeControllers = document.querySelectorAll('.theme-controller');
-      const savedTheme = localStorage.getItem('ozer-theme') || 'light';
+      const backendTheme = document.documentElement.dataset.backendTheme;
       const savedThemeController = Array.from(themeControllers).find(
-        (controller) => controller.value === savedTheme
+        (controller) => controller.value === backendTheme
       );
 
-      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.documentElement.setAttribute('data-theme', backendTheme);
       if (savedThemeController) {
         savedThemeController.checked = true;
       }
@@ -217,7 +221,6 @@
       themeControllers.forEach((controller) => {
         controller.addEventListener('change', () => {
           if (controller.checked) {
-            localStorage.setItem('ozer-theme', controller.value);
             document.documentElement.setAttribute('data-theme', controller.value);
           }
         });

@@ -44,6 +44,16 @@ def get_db():
     return g.db
 
 
+def get_user_theme():
+    db = get_db()
+    theme = db.execute(
+        "SELECT default_theme FROM settings WHERE user_id = ?",
+        (current_user.id,),
+    ).fetchone()
+
+    return theme["default_theme"] if theme else "light"
+
+
 @app.teardown_appcontext
 def close_db(exception=None):
     attr = g.pop("db", None)  # Remove the 'db' attribute from g if it exists
@@ -171,7 +181,11 @@ def logout():
 @app.route("/home", methods=["GET", "POST"])
 @login_required
 def home():
-    return render_template("home.html", user=current_user)
+    return render_template(
+        "home.html",
+        user=current_user,
+        theme=get_user_theme(),
+    )
 
 
 @app.route("/", methods=["GET"])
@@ -228,9 +242,25 @@ def settings():
 
         if not theme or theme not in THEMES:
             flash("Invalid Theme", "error")
+            return redirect(url_for("settings"))
         else:
-            # TODO
-            pass
+            # Update user settings in settings table of db
+            db = get_db()
+
+            update_result = db.execute(
+                "UPDATE settings SET default_theme = ? " "WHERE user_id = ?",
+                (theme, current_user.id),
+            )
+
+            if update_result.rowcount == 0:
+                db.execute(
+                    "INSERT INTO settings (user_id, default_theme) VALUES (?, ?)",
+                    (current_user.id, theme),
+                )
+
+            db.commit()
+            flash("Settings Saved", "success")
+            return render_template("settings.html", theme=theme)
 
     else:
-        return render_template("settings.html")
+        return render_template("settings.html", theme=get_user_theme())
