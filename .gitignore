@@ -219,3 +219,6 @@ __marimo__/
 
 # Local Database
 ozer.db
+
+# Node Modules Directory
+/node_modules
