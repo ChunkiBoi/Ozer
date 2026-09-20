@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block main %}
+
+<div class="flex min-h-[calc(100vh-4rem)] h-full items-center justify-center py-20">
+    <div class="aura aura-silver h-fit w-full max-w-6xl overflow-hidden rounded-lg border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+      <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
+        <div class="card-body flex flex-col justify-center p-8 lg:p-10">
+          <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Settings</h2>
+          <p class="h-10"></p>
+          <label class="floating-label">
+            <div class="card-body flex flex-col justify-center p-4 lg:p-10 shadow-md rounded-md border-3">
+              <h2 class="card-title text-sm lg:text-base font-mono text-base-content leading-normal lg:leading-10">
+                There are 35 themes available to choose from! Look at the top right corner of the page.
+                There, you'll see the "Theme" dropdown menu. Browse the options and choose whichever theme feels best.
+                Then, click the "Save Settings" button on this page. That will ensure the selected option will be the
+                default theme any time you log into your account on any device!
+              </h2>
+            </div>
+            <span class="card-title text-2xl bg-base-300 border-2 rounded-xl border-base-content/60">Theme</span>
+          </label>
+          <form class="card-actions justify-start" action="/settings" method="POST">
+            <input id="theme" hidden name="saved_theme" value="light">
+            <button class="btn btn-info" type="submit">Save Settings</button>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+<script>
+  const settingsThemeControllers = document.querySelectorAll('.theme-controller');
+  const settingsThemeInput = document.querySelector('#theme');
+  const settingsSavedTheme = localStorage.getItem('ozer-theme') || 'light';
+
+  if (settingsThemeInput) {
+    settingsThemeInput.setAttribute("value", settingsSavedTheme);
+  }
+
+  settingsThemeControllers.forEach((controller) => {
+    controller.addEventListener('change', () => {
+      if (controller.checked && settingsThemeInput) {
+        settingsThemeInput.setAttribute("value", controller.value);
+      }
+    });
+  });
+</script>
+
+{% endblock %}

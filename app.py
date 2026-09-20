@@ -180,3 +180,18 @@ def index():
         return redirect(url_for("home"))
     else:
         return render_template("index.html")
+
+
+@app.route("/settings", methods=["GET", "POST"])
+@login_required
+def settings():
+    if request.method == "POST":
+        THEMES = [
+            "light", "dark", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+        ]
+        theme = request.form.get("saved_theme")
+        if not theme:
+            flash("")
+    else:
+        return render_template("settings.html")
