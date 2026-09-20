@@ -80,9 +80,9 @@ def load_user(user_id):
     db = get_db()
     # Query the 'users' table to find the row where id matches user_id
     id_match = db.execute("SELECT * FROM users WHERE id = ?", (user_id,))
-    row = id_match.fetchone()
-    if row is not None:
-        return User(id=row["id"], username=row["username"])
+    user = id_match.fetchone()
+    if user is not None:
+        return User(id=user["id"], username=user["username"])
     else:
         return None
 
