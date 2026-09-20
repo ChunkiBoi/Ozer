@@ -222,3 +222,6 @@ ozer.db
 
 # Node Modules Directory
 /node_modules
+
+# Flask Config
+.flaskenv
