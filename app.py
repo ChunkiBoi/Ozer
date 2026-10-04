@@ -2,17 +2,32 @@ import os
 import re
 import sqlite3
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, flash, g
+from flask import (
+    Flask, 
+    jsonify,
+    render_template, 
+    request, 
+    redirect, 
+    url_for, 
+    flash, 
+    g, 
+    Response
+    )
 from flask_login import (
     LoginManager,
     UserMixin,
     login_user,
     logout_user,
     login_required,
-    current_user,
+    current_user
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-import helpers
+from helpers import (
+    GroqHandler,
+    groq_client,
+    save_chat,
+    get_sys_prompt
+)
 
 # AI assistance disclosure: GitHub Copilot and Google Gemini were used to explain,
 # review, and debug the common Flask patterns used here. This included the app
@@ -21,6 +36,9 @@ import helpers
 # the project requirements and requirements of this app.
 
 app = Flask(__name__)
+
+# Ensure instance directory exists on app startup
+os.makedirs(app.instance_path, exist_ok=True)
 
 load_dotenv()
 secret_key = os.environ.get("SECRET_KEY")
@@ -32,13 +50,16 @@ if not secret_key:
 # Safely assign the verified key
 app.secret_key = secret_key
 
+app.config["SESSION_COOKIE_NAME"] = "ozer_session"
+
 
 # AI-assisted: Copilot helped confirm the standard Flask pattern for a per-request
 # SQLite connection and teardown. I adapted the pattern to this project and kept
 # the final database lifecycle logic consistent with the app's use of g and SQL.
 def get_db():
     if "db" not in g:
-        g.db = sqlite3.connect("ozer.db")
+        db_path = os.path.join(app.instance_path, "ozer.db")
+        g.db = sqlite3.connect(db_path)
         g.db.row_factory = sqlite3.Row
         g.db.execute("PRAGMA foreign_keys = ON")
     return g.db
@@ -79,11 +100,13 @@ class User(UserMixin):
 def load_user(user_id):
     db = get_db()
     # Query the 'users' table to find the row where id matches user_id
-    id_match = db.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+    numeric_id = int(user_id)
+    id_match = db.execute("SELECT * FROM users WHERE id = ?", (numeric_id,))
     user = id_match.fetchone()
     if user is not None:
         return User(id=user["id"], username=user["username"])
     else:
+        print("ERROR LOADING USER")
         return None
 
 
@@ -126,7 +149,7 @@ def register():
         # Insert the new user into the database
         db.execute(
             "INSERT INTO users (username, hash) VALUES (?, ?)",
-            (username, hashed_password),
+            (username, hashed_password)
         )
         db.commit()
 
@@ -235,32 +258,144 @@ def settings():
             "luxury",
             "night",
             "sunset",
-            "synthwave",
+            "synthwave"
+        ]
+        MODELS = [
+            "openai/gpt-oss-120b",
+            "openai/gpt-oss-20b",
+            "qwen/qwen3.8-27b"
         ]
 
         theme = request.form.get("saved_theme")
+        model = request.form.get("model-dropdown")
+        sys_prompt = request.form.get("sys_prompt")
 
-        if not theme or theme not in THEMES:
-            flash("Invalid Theme", "error")
+        if theme:
+            if theme not in THEMES:
+                flash("Invalid Theme", "error")
+                return redirect(url_for("settings"))
+            else:
+                # Update user settings in settings table of db
+                db = get_db()
+
+                update_result = db.execute(
+                    "UPDATE settings SET default_theme = ? WHERE user_id = ?",
+                    (theme, current_user.id)
+                )
+
+                if update_result.rowcount == 0:
+                    db.execute(
+                        "INSERT INTO settings (user_id, default_theme) VALUES (?, ?)",
+                        (current_user.id, theme)
+                    )
+
+                db.commit()
+                flash("Theme Saved", "success")
+                return render_template("settings.html", theme=theme, sys_prompt=sys_prompt)
+        elif model:
+            if model not in MODELS:
+                flash("Invalid Model", "error")
+                return redirect(url_for("settings"))
+            else:
+                # Update user settings in settings table of db
+                db = get_db()
+
+                update_result = db.execute(
+                    "UPDATE settings SET default_model = ? WHERE user_id = ?",
+                    (model, current_user.id)
+                )
+
+                if update_result.rowcount == 0:
+                    db.execute(
+                        "INSERT INTO settings (user_id, default_theme, default_model) VALUES (?, ?, ?)",
+                        (current_user.id, get_user_theme(), model)
+                    )
+
+                db.commit()
+                flash("Model Saved", "success")
+
+                sys_prompt = get_sys_prompt()
+                return render_template("settings.html", theme=get_user_theme(), sys_prompt=sys_prompt)
+            
+        elif not model and not theme and not sys_prompt:
+            flash("Invalid Input: Unable to Save Settings", "error")
             return redirect(url_for("settings"))
+        
         else:
+            if sys_prompt is None:
+                sys_prompt = ""
             # Update user settings in settings table of db
             db = get_db()
 
             update_result = db.execute(
-                "UPDATE settings SET default_theme = ? " "WHERE user_id = ?",
-                (theme, current_user.id),
+                "UPDATE settings SET default_sys_prompt = ? WHERE user_id = ?",
+                (sys_prompt, current_user.id)
             )
 
             if update_result.rowcount == 0:
                 db.execute(
-                    "INSERT INTO settings (user_id, default_theme) VALUES (?, ?)",
-                    (current_user.id, theme),
+                    "INSERT INTO settings (user_id, default_theme, default_sys_prompt) VALUES (?, ?, ?)",
+                    (current_user.id, get_user_theme(), sys_prompt)
                 )
 
             db.commit()
-            flash("Settings Saved", "success")
-            return render_template("settings.html", theme=theme)
+            flash("System Prompt Saved", "success")
+            return render_template("settings.html", theme=get_user_theme(), sys_prompt=sys_prompt)
 
     else:
-        return render_template("settings.html", theme=get_user_theme())
+        db = get_db()
+        sys_prompt = get_sys_prompt()
+
+        return render_template("settings.html", theme=get_user_theme(), sys_prompt=sys_prompt)
+
+
+@app.route("/quick-chat", methods=["GET"])
+@login_required
+def quick_chat():
+    db= get_db()
+
+    model = db.execute(
+        """
+        SELECT default_model FROM settings
+        WHERE user_id = ?
+        """,
+        (current_user.id,)
+    ).fetchone()
+
+    sys_prompt = db.execute(
+        """
+        SELECT default_sys_prompt FROM settings
+        WHERE user_id = ?
+        """,
+        (current_user.id,)
+    ).fetchone()
+    if model is None or sys_prompt is None:
+        sys_prompt = ""
+        db.execute(
+            "INSERT INTO settings (user_id, default_theme, default_sys_prompt) VALUES (?, ?, ?)",
+            (current_user.id, get_user_theme(), sys_prompt)
+        )
+    print(current_user["username"], model[0], sys_prompt[0])
+    return render_template("chat.html", user=current_user, theme=get_user_theme(), model=model[0], sys_prompt=sys_prompt[0])
+
+
+# TODO: Needs to be removed when possible
+@app.route("/chat", methods=["GET"])
+@login_required
+def chat_page():
+    return render_template("chat.html", theme=get_user_theme())
+
+
+@app.route("/chat", methods=["POST"])
+@login_required
+def chat_stream():
+    payload = request.get_json()
+    print(payload)
+    if payload:
+        # SQL helper for saving chat in db
+        if not payload["existing_chat"]:
+            save_chat(payload)
+        groq_bot = GroqHandler(client=groq_client, settings=payload["settings"])
+        return Response(groq_bot.stream(payload["message"]), mimetype="text/plain")
+    else:
+        return jsonify({"error" : "Invalid message payload"}), 400
