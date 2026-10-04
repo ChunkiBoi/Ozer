@@ -18,9 +18,11 @@ import sqlite3
 from pathlib import Path
 
 project_dir = Path(__file__).resolve().parent
-database_path = project_dir / "ozer.db"
+instance_dir = project_dir / "instance"
+database_path = instance_dir / "ozer.db"
 schema_path = project_dir / "schema.sql"
 
+instance_dir.mkdir(parents=True, exist_ok=True)
 with sqlite3.connect(database_path) as db:
     db.execute("PRAGMA foreign_keys = ON")
 
