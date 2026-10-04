@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block head %}
+
+<style>
+  /* Dynamic drop shadow for all 35 DaisyUI themes */
+  .chat-bubble-dynamic-shadow {
+    /* 
+      color-mix() creates a drop shadow using
+      the active theme's foreground text color.
+    */
+    filter: drop-shadow(
+      0px 1px 6px 
+      color-mix(in srgb, var(--color-base-content, currentColor) 60%, transparent)
+    );
+  }
+
+  /* Custom Markdown rules inside chat bubbles */
+  .chat-bubble h1 { font-size: 2.5rem; font-weight: 700; margin-block: 0.5rem;}
+  .chat-bubble h2 { font-size: 2.0rem; font-weight: 600; margin-block: 0.5rem; }
+  .chat-bubble h3 { font-size: 1.5rem; font-weight: 500; margin-block: 0.25rem; }
+
+  .chat-bubble ul { list-style-type: disc; padding-left: 1.25rem; }
+  .chat-bubble ol { list-style-type: decimal; padding-left: 1.25rem; }
+</style>
+
+{% endblock %}
+
+{% block title %}Chat{% endblock %}
+
+{% block main %}
+
+<div id="chat-area" class="-m-4 flex min-h-[calc(100vh-4rem)] flex-col scroll-smooth">
+  <div id="messages" class="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth">
+    <!-- Chat Messages -->
+  </div>
+
+  <!-- Error message which only appears if API usage maxes out after sent message -->
+  <div hidden id="limit-error" class="flex flex-row items-center lg:m-30 lg:translate-y-32 p-2 lg:p-4 gap-4">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 shrink-0 stroke-current" fill="red" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m0 3.75h.01M10.29 3.86l-7.82 13.5A1.5 1.5 0 003.77 19.6h16.46a1.5 1.5 0 001.3-2.24l-7.82-13.5a1.5 1.5 0 00-2.6 0z" />
+    </svg> 
+    <span class="lg:text-2xl font-bold font-mono">
+      Usage is currently high for the selected 
+      model. Please choose another model or wait
+      a moment before sending your message again.
+    </span>
+  </div>
+
+  <div class="aura aura-glow aura-top sticky bottom-0 rounded-t-2xl bg-base-300/60">
+    <form
+      id="chat-form"
+      class="sticky bottom-0 border-t border-base-300 bg-base-300 rounded-t-2xl p-5 translate-y-0.5"
+      action="/chat"
+      method="POST"
+    >
+      <div class="flex gap-4">
+        <textarea
+          name="message"
+          id="message-input"
+          class="textarea textarea-bordered sticky bottom-0 brightness-120 min-h-12 flex-1 resize-none scroll-auto text-2xl"
+          autofocus
+          placeholder="Enter message..."
+          rows="1"
+        ></textarea>
+        
+        <!-- Username -->
+        <input id="username" hidden value="{{ user.username }}" />
+        <!-- Selected Model -->
+        <input id="model" hidden value="{{ model }}" />
+        <!-- System Prompt -->
+        <input id="sys_prompt" hidden value="{{ sys_prompt }}" />
+
+        <button type="submit" class="btn btn-primary btn-lg self-end font-mono">
+          Send
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='chat.js') }}" defer></script>
+
+{% endblock %}
