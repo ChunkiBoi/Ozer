@@ -24,7 +24,8 @@
               <div class="card-body flex flex-col justify-center p-8 lg:p-10">
                 <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Hello, {{ user.username }}!</h2>
                 <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Welcome to your Home Page!</h2>
-                <p class="mb-3 text-base text-base-content/90">You are logged in.</p>
+                <p class="text-base text-base-content/90">You are logged in.</p>
+                <div class="divider"></div>
                 <p class="mb-3 text-base text-base-content/90">Use the arrows below to explore the possibilities!</p>
                 <div class="card-actions justify-start">
                   <a href="{{ url_for('logout') }}" class="btn btn-error">Log Out</a>
@@ -54,10 +55,16 @@
               </figure>
               <div class="card-body flex flex-col justify-center p-8 lg:p-10">
                 <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Create a Chat!</h2>
+                <div class="divider"></div>
                 <p class="mb-3 text-base text-base-content/90">Select your preferred model.</p>
-                <p class="mb-3 text-base text-base-content/90">Create a new generic chat session!</p>
+                <p class="text-base text-base-content/90">Create a new generic chat session!</p>
+                <div class="divider"></div>
+                <p class="text-base text-base-content/90">
+                  You can set a default system prompt for generic chats in the settings.
+                </p>
+                <div class="divider"></div>
                 <div class="card-actions justify-start">
-                  <a href="{{ url_for('home') }}" class="btn btn-accent">Create Chat</a>
+                  <a href="{{ url_for('quick_chat') }}" class="btn btn-accent">Quick Chat</a>
                 </div>
               </div>
             </div>
@@ -116,10 +123,11 @@
               </figure>
               <div class="card-body flex flex-col justify-center p-8 lg:p-10">
                 <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Explore the Sidebar!</h2>
-                <br>
+                <div class="divider"></div>
                 <p class="mb-3 text-base text-base-content/90">Open by clicking the Sidebar Button (top-left corner)</p>
                 <p class="mb-3 text-base text-base-content/90">In the Sidebar, you can explore your previously created Chats/Bots.</p>
-                <p class="mb-3 text-base text-base-content/90">You also have the option to delete Chats/Bots there.</p>
+                <p class="text-base text-base-content/90">You also have the option to delete Chats/Bots there.</p>
+                <div class="divider"></div>
               </div>
             </div>
           </div>
@@ -145,12 +153,12 @@
               </figure>
               <div class="card-body flex flex-col justify-center p-8 lg:p-10">
                 <h2 class="card-title mb-4 text-3xl font-bold text-base-content">Customize your Settings!</h2>
-                <p class="mb-3 text-base text-base-content/90">You can visit the Settings page to adjust and save your preferences.</p>
-                <br>
-                <p class="mb-3 text-base text-base-content/90">The theme can be selected from the dropdown menu found</p>
+                <p class="text-base text-base-content/90">You can visit the Settings page to adjust and save your preferences.</p>
+                <div class="divider"></div>
+                <p class="lg:mb-3 text-base text-base-content/90">The theme can be selected from the dropdown menu found</p>
                 <p class="mb-3 text-base text-base-content/90">at the right side of the navigation bar (top-right corner).</p>
-                <p class="mb-3 text-base text-base-content/90">Your selected theme can be saved as default in the Settings!</p>
-                <br>
+                <p class="text-base text-base-content/90">Your selected theme can be saved as default in the Settings!</p>
+                <div class="divider"></div>
                 <p class="mb-3 text-base text-base-content/90">You can find some other useful customizations there, too!</p>
                 <p class="mb-3 text-base text-base-content/90">Click the button below to visit the Settings page.</p>
                 <div class="card-actions justify-start">
