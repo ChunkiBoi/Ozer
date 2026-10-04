@@ -1,6 +1,6 @@
 -- Drop tables if they exist
 DROP TABLE IF EXISTS messages;
-DROP TABLE IF EXISTS bots;
+DROP TABLE IF EXISTS chats;
 DROP TABLE IF EXISTS settings;
 DROP TABLE IF EXISTS users;
 
@@ -16,12 +16,13 @@ CREATE TABLE settings (
     id INTEGER PRIMARY KEY AUTOINCREMENT, -- settings profile id
     user_id INTEGER NOT NULL, -- user who the settings profile belongs to
     default_theme TEXT NOT NULL DEFAULT 'light', -- theme automatically set on login
+    default_model TEXT NOT NULL DEFAULT 'meta-llama/llama-prompt-guard-2-22m', -- default model for chat creation
     default_sys_prompt TEXT, -- default system prompt for generic chat creation
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Create bots table
-CREATE TABLE bots (
+-- Create chats table
+CREATE TABLE chats (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL, -- owner/creator of the custom bot
     name TEXT NOT NULL, -- name of the custom bot (i.e. "SQLBot", "PythonHelper", etc.)
@@ -33,9 +34,9 @@ CREATE TABLE bots (
 -- Create messages table
 CREATE TABLE messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    bot_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
     sender TEXT NOT NULL, -- "user" or "bot"
     content TEXT NOT NULL, -- text content of the message
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, -- timestamp of when the message was sent
-    FOREIGN KEY (bot_id) REFERENCES bots(id) ON DELETE CASCADE
+    FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
 );
