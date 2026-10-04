@@ -17,6 +17,8 @@
     <!-- DaisyUI CSS -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
+    <!-- Marked.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Favicon and App Icons -->
     <link rel="icon" type="image/png" href="/static/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
@@ -47,6 +49,7 @@
         translate: 0;
       }
     </style>
+    {% block head %}{% endblock %}
     <title>{% block title %}{% endblock %}</title>
   </head>
   <body>
@@ -66,7 +69,7 @@
                 alt="Ozer logo"
                 class="h-10 w-10 object-contain"
               />
-              <span>Ozer</span>
+              <span class="font-mono text-shadow-xl">OZER</span>
             </a>
           </div>
           <div class="navbar-center hidden lg:flex">
@@ -161,7 +164,7 @@
               {% endfor %}
             {% endif %}
           {% endwith %}
-
+ 
           {% block main %}{% endblock %}
         </main>
       </div>
