@@ -11,7 +11,8 @@ from flask import (
     url_for, 
     flash, 
     g, 
-    Response
+    Response,
+    stream_with_context
     )
 from flask_login import (
     LoginManager,
@@ -26,6 +27,9 @@ from helpers import (
     GroqHandler,
     groq_client,
     save_chat,
+    save_user_message,
+    get_chat_list,
+    get_messages,
     get_sys_prompt
 )
 
@@ -201,22 +205,23 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/home", methods=["GET", "POST"])
-@login_required
-def home():
-    return render_template(
-        "home.html",
-        user=current_user,
-        theme=get_user_theme(),
-    )
-
-
 @app.route("/", methods=["GET"])
 def index():
     if current_user.is_authenticated:
         return redirect(url_for("home"))
     else:
         return render_template("index.html")
+
+
+@app.route("/home", methods=["GET", "POST"])
+@login_required
+def home():
+    return render_template(
+        "home.html",
+        user=current_user,
+        chat_list=get_chat_list(),
+        theme=get_user_theme(),
+    )
 
 
 @app.route("/settings", methods=["GET", "POST"])
@@ -291,7 +296,9 @@ def settings():
 
                 db.commit()
                 flash("Theme Saved", "success")
-                return render_template("settings.html", theme=theme, sys_prompt=sys_prompt)
+
+                sys_prompt = get_sys_prompt()
+                return render_template("settings.html", user=current_user, chat_list=get_chat_list(), theme=theme, sys_prompt=sys_prompt)
         elif model:
             if model not in MODELS:
                 flash("Invalid Model", "error")
@@ -315,7 +322,7 @@ def settings():
                 flash("Model Saved", "success")
 
                 sys_prompt = get_sys_prompt()
-                return render_template("settings.html", theme=get_user_theme(), sys_prompt=sys_prompt)
+                return render_template("settings.html", user=current_user, chat_list=get_chat_list(), theme=get_user_theme(), sys_prompt=sys_prompt)
             
         elif not model and not theme and not sys_prompt:
             flash("Invalid Input: Unable to Save Settings", "error")
@@ -323,7 +330,7 @@ def settings():
         
         else:
             if sys_prompt is None:
-                sys_prompt = ""
+                sys_prompt = " "
             # Update user settings in settings table of db
             db = get_db()
 
@@ -340,13 +347,13 @@ def settings():
 
             db.commit()
             flash("System Prompt Saved", "success")
-            return render_template("settings.html", theme=get_user_theme(), sys_prompt=sys_prompt)
+            return render_template("settings.html", user=current_user, chat_list=get_chat_list(), theme=get_user_theme(), sys_prompt=sys_prompt)
 
     else:
         db = get_db()
         sys_prompt = get_sys_prompt()
 
-        return render_template("settings.html", theme=get_user_theme(), sys_prompt=sys_prompt)
+        return render_template("settings.html", user=current_user, chat_list=get_chat_list(), theme=get_user_theme(), sys_prompt=sys_prompt)
 
 
 @app.route("/quick-chat", methods=["GET"])
@@ -354,36 +361,43 @@ def settings():
 def quick_chat():
     db= get_db()
 
-    model = db.execute(
-        """
-        SELECT default_model FROM settings
-        WHERE user_id = ?
-        """,
-        (current_user.id,)
-    ).fetchone()
+    model = None
+    sys_prompt = None
+    while model is None or sys_prompt is None:
+        model = db.execute(
+            """
+            SELECT default_model FROM settings
+            WHERE user_id = ?
+            """,
+            (current_user.id,)
+        ).fetchone()
 
-    sys_prompt = db.execute(
-        """
-        SELECT default_sys_prompt FROM settings
-        WHERE user_id = ?
-        """,
-        (current_user.id,)
-    ).fetchone()
-    if model is None or sys_prompt is None:
-        sys_prompt = ""
-        db.execute(
-            "INSERT INTO settings (user_id, default_theme, default_sys_prompt) VALUES (?, ?, ?)",
-            (current_user.id, get_user_theme(), sys_prompt)
-        )
-    print(current_user["username"], model[0], sys_prompt[0])
-    return render_template("chat.html", user=current_user, theme=get_user_theme(), model=model[0], sys_prompt=sys_prompt[0])
+        sys_prompt = db.execute(
+            """
+            SELECT default_sys_prompt FROM settings
+            WHERE user_id = ?
+            """,
+            (current_user.id,)
+        ).fetchone()
+        if model is None or sys_prompt is None:
+            sys_prompt = " "
+            db.execute(
+                "INSERT INTO settings (user_id, default_theme, default_sys_prompt) VALUES (?, ?, ?)",
+                (current_user.id, get_user_theme(), sys_prompt)
+            )
+            db.commit()
+
+    return render_template("chat.html", user=current_user, chat_list=get_chat_list(), theme=get_user_theme(), model=model[0], sys_prompt=sys_prompt[0])
 
 
-# TODO: Needs to be removed when possible
 @app.route("/chat", methods=["GET"])
 @login_required
 def chat_page():
-    return render_template("chat.html", theme=get_user_theme())
+    chat_id = request.args.get("chat-id")
+    model = request.args.get("model")
+    sys_prompt = request.args.get("sys-prompt")
+
+    return render_template("chat.html", user=current_user, chat_list=get_chat_list(), messages=get_messages(chat_id), theme=get_user_theme(), chat_id=chat_id, model=model, sys_prompt=sys_prompt)
 
 
 @app.route("/chat", methods=["POST"])
@@ -392,10 +406,27 @@ def chat_stream():
     payload = request.get_json()
     print(payload)
     if payload:
-        # SQL helper for saving chat in db
-        if not payload["existing_chat"]:
-            save_chat(payload)
+        g.db = get_db()
+        settings = payload["settings"]
+        chat_id = settings.get("chat_id")
+        # SQL helper for saving new chat in db
+        if not payload.get("existing_chat") or not chat_id:
+            chat_id = save_chat(payload) # Saves chat and returns the chat's id
+            settings["chat_id"] = chat_id
+            save_user_message(chat_id, payload["message"])
+        else:
+            save_user_message(chat_id, payload["message"])
+            
         groq_bot = GroqHandler(client=groq_client, settings=payload["settings"])
-        return Response(groq_bot.stream(payload["message"]), mimetype="text/plain")
+        message_with_context = groq_bot.get_context(payload["message"])
+        def get_stream():
+            get_db()
+            yield from groq_bot.stream(message_with_context)
+        
+        response = Response(stream_with_context(get_stream()), mimetype="text/plain")
+        if chat_id is not None:
+            response.headers["Chat-ID"] = str(chat_id)
+        
+        return response
     else:
         return jsonify({"error" : "Invalid message payload"}), 400
