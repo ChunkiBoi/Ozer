@@ -115,13 +115,111 @@
         <!-- System Prompt -->
         <input id="sys_prompt" hidden value="{{ sys_prompt }}" />
 
-        <button type="button" class="btn btn-info btn-circle btn-lg self-end items-center justify-center" aria-label="Settings" title="Settings">
-          <span class="block -translate-y-1.5 text-5xl leading-none" aria-hidden="true">&#9881;&#xfe0e;</span>
-        </button>
-
         <button type="submit" class="btn btn-primary btn-lg self-end font-mono">
           Send
         </button>
+
+        <button id="chat-settings-btn" type="button" class="btn btn-circle lg:btn-sm btn-xs bg-transparent border-0 lg:-translate-y-2 -translate-y-2.5 self-end items-center justify-center" onclick="my_modal_1.showModal()" aria-label="Settings" title="Settings">
+          <span class="block -translate-y-1.5 lg:text-5xl text-4xl leading-none" aria-hidden="true">&#9881;&#xfe0e;</span>
+        </button>
+
+        <dialog id="my_modal_1" class="modal">
+          <div class="modal-box w-11/12 max-w-6xl">
+            
+
+            <div class="flex min-h-[calc(100vh-4rem)] h-full items-center justify-center py-20">
+              <div class="aura aura-silver h-fit w-full max-w-6xl overflow-hidden rounded-lg border border-base-300 bg-base-200 shadow-xl shadow-base-300/20 lg:min-h-0 lg:flex-1">
+                <div class="card h-fit bg-base-200 lg:card-side lg:h-full">
+                  <div class="card-body flex flex-col justify-center p-8 lg:p-10">
+                    <h2 tabindex="-1" autofocus class="card-title mb-4 text-3xl font-bold text-base-content">Chat Settings</h2>
+                    <p class="h-10"></p>
+
+                    <label class="floating-label">
+                      <div class="card-body flex flex-col justify-center p-4 lg:p-10 shadow-md rounded-md border-3">
+                        <h2 class="card-title text-sm lg:text-base font-mono text-base-content leading-normal lg:leading-10">
+                          Here, you can select the LLM model that will be used 
+                          by default any time you create a quick chat from your
+                          home page. Click the "Model" button below to open the
+                          model selection dropdown menu, browse the options,
+                          then select whichever model you'd prefer.
+                        </h2>
+                          <div>
+                            <form class="card-actions justify-start" action="/settings" method="POST">
+                              <div id="model_btn" class="dropdown">
+                                <div id="model_trigger" tabindex="0" role="button" class="btn btn-sm btn-ghost m-1 w-40 border border-neutral-50">
+                                  Model
+                                  <svg
+                                    width="12px"
+                                    height="12px"
+                                    class="inline-block h-2 w-2 fill-current opacity-60"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 2048 2048">
+                                    <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
+                                  </svg>
+                                </div>
+                                <ul id="model_list" tabindex="-1" class="dropdown-content bg-base-300 rounded-box w-46 p-2 shadow-2xl max-h-80 overflow-y-auto">
+                                  <li class="sticky top-0 z-10 mb-1 bg-base-300 px-2 py-1 text-xs opacity-70 pointer-events-none">
+                                    Scroll for more models
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 inline-block h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m-6-6 6 6 6-6" />
+                                    </svg>
+                                  </li>
+                                  <li><input type="radio" name="model-dropdown" class="model-controller w-full border border-neutral-50/40 leading-snug p-4 btn btn-sm btn-block btn-ghost justify-start" aria-label="openai/gpt-oss-120b" value="openai/gpt-oss-120b" /></li>
+                                  <li><input type="radio" name="model-dropdown" class="model-controller w-full border border-neutral-50/40 leading-snug p-4 btn btn-sm btn-block btn-ghost justify-start" aria-label="openai/gpt-oss-20b" value="openai/gpt-oss-20b" /></li>
+                                  <li><input type="radio" name="model-dropdown" class="model-controller w-full border border-neutral-50/40 leading-snug p-4 btn btn-sm btn-block btn-ghost justify-start" aria-label="qwen/qwen3.8-27b" value="qwen/qwen3.8-27b" /></li>
+                                </ul>
+                              </div>
+
+                              <button class="btn btn-info" type="submit">Save Model</button>
+                            </form>
+                          </div>
+                      </div>
+                      <span class="card-title text-2xl bg-base-300 border-2 rounded-xl border-base-content/60">Model</span>
+                    </label>
+
+                    <p class="h-10"></p>
+
+                    <label class="floating-label">
+                      <div class="card-body flex flex-col justify-center p-4 lg:p-10 shadow-md rounded-md border-3">
+                        <h2 class="card-title text-sm lg:text-base font-mono text-base-content leading-normal lg:leading-10">
+                          Using the box below, you can input instructions that will 
+                          automatically apply to any chat created using the "Quick 
+                          Chat" button on the home page. This makes the chat bot
+                          behave in a certain way or focus on a specific issue. 
+                          Examples: "Your sole purpose is to teach me about Computer
+                          Science", "You are an alien who knows english and is very
+                          good at math", or "You are a cat." After entering the prompt 
+                          in the box, click the "Save System Prompt" button.
+                        </h2>
+                          <div>
+                            <form class="card-actions justify-start" action="/settings" method="POST">
+                              <textarea id="text-area" name="sys_prompt" placeholder="Enter prompt..." class="textarea w-full">{{ sys_prompt }}</textarea>
+                              <button class="btn btn-info" type="submit">Save System Prompt</button>
+                            </form>
+                            <p class="h-1"></p>
+                            <form class="card-actions justify-start" action="/settings" method="POST">
+                              <input name="sys_prompt" hidden value=" " />
+                              <button class="btn btn-error" type="submit">Reset</button>
+                            </form>
+                          </div>
+                      </div>
+                      <span class="card-title text-2xl bg-base-300 border-2 rounded-xl border-base-content/60">System Prompt</span>
+                    </label>
+
+                  </div>
+                </div>
+              </div>
+          </div>
+
+
+            <p class="py-4">Press ESC key or click the button below to close</p>
+            <div class="modal-action">
+              <!-- Button to close the modal -->
+              <button type="button" class="btn" onclick="my_modal_1.close()">Close</button>
+            </div>
+          </div>
+        </dialog>
+
       </div>
     </form>
   </div>
