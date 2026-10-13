@@ -65,7 +65,7 @@ function createBotBubble() {
 
     return bubble;
 }
-
+let chatId = null
 async function streamMessagePayload(endpoint, payload) {
     let userBubble = createMessageBubble();
     userBubble.scrollIntoView({
@@ -98,6 +98,8 @@ async function streamMessagePayload(endpoint, payload) {
         throw new Error(`Request failed: ${response.status}`);
     }
 
+    chatId = response.headers.get("Chat-ID");
+
     // Initialize stream reader and UTF-8 text decoder
     const reader = response.body.getReader();
     const decoder = new TextDecoder('utf-8');
@@ -122,10 +124,22 @@ async function streamMessagePayload(endpoint, payload) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("#messages .chat-bubble").forEach((bubble) => {
+        bubble.innerHTML = marked.parse((bubble.textContent || "").trimStart());
+        bubble.scrollIntoView({
+            behavior: "instant",
+            block: "end"
+        });
+    });
+    scrollBy(0, 180, {
+        behavior: "smooth",
+    });
+
     const form = document.querySelector("#chat-form");
     const input = document.querySelector("#message-input");
     const modelSelection = document.getElementById("model");
     const systemPrompt = document.getElementById("sys_prompt");
+    chatId = document.getElementById("chat-id").value || null;
     let msgCount = 0;
 
     input.addEventListener("keydown", (event) => {
@@ -153,20 +167,33 @@ document.addEventListener("DOMContentLoaded", () => {
             var chatExists = true;
         }
 
-        let payload = {
-            "message": message,
-            "settings": {
-                "model": model,
-                "sys_prompt": sys_prompt // Empty placeholder to be replaced with variable
-            },
-            "existing_chat": chatExists
+        if (chatId) {
+            chatExists = true;
+            var payload = {
+                "message": message,
+                "settings": {
+                    "model": model,
+                    "sys_prompt": sys_prompt,
+                    "chat_id": chatId
+                },
+                "existing_chat": chatExists
+            }
         }
-        
+        else {
+            var payload = {
+                "message": message,
+                "settings": {
+                    "model": model,
+                    "sys_prompt": sys_prompt
+                },
+                "existing_chat": chatExists
+            }
+        }
+        console.log(payload);
         input.disabled = true;
         await streamMessagePayload("/chat", payload);
         input.disabled = false;
         input.focus();
         msgCount += 1;
-        console.log(msgCount);
     });
 });
