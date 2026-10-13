@@ -1,7 +1,12 @@
 {
-  "name": "Python/Flask Dev Environment",
+  "name": "ozer",
   "image": "mcr.microsoft.com/devcontainers/python:3.12",
-
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts",
+      "nodeGypDependencies": true
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -24,8 +29,10 @@
       }
     }
   },
-
-  "forwardPorts": [5000, 8080],
+  "forwardPorts": [
+    5000,
+    8080
+  ],
   "portsAttributes": {
     "5000": {
       "label": "Flask App",
@@ -36,8 +43,6 @@
       "onAutoForward": "openPreview"
     }
   },
-
-  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y sqlite3 git-lfs && git lfs install && pip install --upgrade pip && pip install flask flask-login python-dotenv requests sqlite-web openai google-genai groq",
-
+  "postCreateCommand": "bash -lc 'sudo apt-get update && sudo apt-get install -y sqlite3 git-lfs && git lfs install && python -m pip install --upgrade pip && python -m pip install -r requirements.txt && npm install'",
   "remoteUser": "vscode"
 }
