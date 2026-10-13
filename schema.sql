@@ -16,7 +16,7 @@ CREATE TABLE settings (
     id INTEGER PRIMARY KEY AUTOINCREMENT, -- settings profile id
     user_id INTEGER NOT NULL, -- user who the settings profile belongs to
     default_theme TEXT NOT NULL DEFAULT 'light', -- theme automatically set on login
-    default_model TEXT NOT NULL DEFAULT 'meta-llama/llama-prompt-guard-2-22m', -- default model for chat creation
+    default_model TEXT NOT NULL DEFAULT 'openai/gpt-oss-120b', -- default model for chat creation
     default_sys_prompt TEXT, -- default system prompt for generic chat creation
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
