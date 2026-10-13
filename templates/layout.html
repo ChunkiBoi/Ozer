@@ -205,7 +205,7 @@
                   {% for chat in chat_list %}
 
                     <li>
-                      <form class="w-fit p-0" action="{{ url_for('chat_page') }}" method="GET" class="">
+                      <form class="w-fit p-0" action="{{ url_for('chat_page') }}" method="GET">
                         <input name="chat-id" type="hidden" value="{{ chat['id'] }}" />
                         <input name="model" type="hidden" value="{{ chat['model'] }}" />
                         <input name="sys-prompt" type="hidden" value="{{ chat['sys_prompt'] }}" />
